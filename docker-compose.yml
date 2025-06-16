@@ -1,0 +1,24 @@
+# docker-compose.yml
+
+services:
+  # The Express application service
+  express-app:
+    # Use the image we push to Docker Hub
+    # IMPORTANT: Replace <YOUR-DOCKERHUB-USERNAME> with your actual username
+    image: litian6/express-app-pipeline:latest
+    container_name: express-app-instance
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+  # The Watchtower service for automatic updates
+  watchtower:
+    # Use the official Watchtower image
+    image: containrrr/watchtower
+    container_name: watchtower-instance
+    volumes:
+      # Mount the Docker socket to allow Watchtower to manage other containers
+      - /var/run/docker.sock:/var/run/docker.sock
+    # Check for new images every 30 seconds
+    command: --interval 30
+    restart: unless-stopped
